@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/urfave/cli"
+	"net/http"
 	"os"
 	"regexp"
 )
@@ -14,18 +15,37 @@ func CommandNotFound(c *cli.Context, command string) {
 	fmt.Fprintf(os.Stderr, "%s: '%s' is not a %s command. See '%s --help'.", c.App.Name, command, c.App.Name, c.App.Name)
 	os.Exit(2)
 }
+func existUser(u string) bool {
+	url := "http://github.com/" + u
+
+	response, err := http.Get(url)
+	if err != nil {
+		os.Exit(2)
+	}
+
+	if response.StatusCode == 200 {
+		return true
+	} else {
+		return false
+	}
+}
 
 func validate(u string, s string, e string) {
 	r := regexp.MustCompile(`^(\d{6})$`)
+
 	if len(u) == 0 || len(s) == 0 || len(e) == 0 {
 		fmt.Printf("-u, -s, -e is required.]\n")
 		os.Exit(1)
 	} else if !r.MatchString(s) || !r.MatchString(e) {
 		fmt.Printf("Invalid arguments --start %s --end %s\n", s, e)
 		os.Exit(1)
+	} else if !existUser(u) {
+		fmt.Printf("User %s is not found\n", u)
+		os.Exit(1)
 	} else {
-		fmt.Printf("Validation OK!\n")
+		fmt.Printf("Validation is OK!\n")
 	}
+
 }
 
 func main() {
