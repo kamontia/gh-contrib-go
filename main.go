@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/urfave/cli"
+	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"regexp"
@@ -81,13 +83,25 @@ func main() {
 		enddate := c.String("end")
 		validate(user, startdate, enddate)
 
-		/* search api */
+		url := "https://api.github.com/search/issues?q=type:pr+in:body+is:merged+author:chaspy"
 
-    /* parse json */
+		response, err := http.Get(url)
+		if err != nil {
+			os.Exit(2)
+		}
 
-    /* put std.out */
+		defer response.Body.Close()
+		body, error := ioutil.ReadAll(response.Body)
+		if error != nil {
+			log.Fatal(error)
+		}
+		fmt.Println("[body] " + string(body))
 
-    return nil
+		/* parse json */
+
+		/* put std.out */
+
+		return nil
 	}
 	app.Run(os.Args)
 }
