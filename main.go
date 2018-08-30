@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/urfave/cli"
 	"os"
+	"regexp"
 )
 
 var GlobalFlags = []cli.Flag{}
@@ -15,9 +16,15 @@ func CommandNotFound(c *cli.Context, command string) {
 }
 
 func validate(u string, s string, e string) {
+	r := regexp.MustCompile(`^(\d{6})$`)
 	if len(u) == 0 || len(s) == 0 || len(e) == 0 {
-		fmt.Printf("Invalid arguments")
+		fmt.Printf("-u, -s, -e is required.]\n")
 		os.Exit(1)
+	} else if !r.MatchString(s) || !r.MatchString(e) {
+		fmt.Printf("Invalid arguments --start %s --end %s\n", s, e)
+		os.Exit(1)
+	} else {
+		fmt.Printf("Validation OK!\n")
 	}
 }
 
