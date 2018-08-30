@@ -81,8 +81,13 @@ func main() {
 		enddate := c.String("end")
 		validate(user, startdate, enddate)
 
-		fmt.Printf("Hello, gh-contrib\n")
-		return nil
+		/* search api */
+
+    /* parse json */
+
+    /* put std.out */
+
+    return nil
 	}
 	app.Run(os.Args)
 }
