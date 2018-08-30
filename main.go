@@ -14,6 +14,13 @@ func CommandNotFound(c *cli.Context, command string) {
 	os.Exit(2)
 }
 
+func validate(u string, s string, e string) {
+	if len(u) == 0 || len(s) == 0 || len(e) == 0 {
+		fmt.Printf("Invalid arguments")
+		os.Exit(1)
+	}
+}
+
 func main() {
 	app := cli.NewApp()
 	app.Name = Name
@@ -40,7 +47,14 @@ func main() {
 	app.CommandNotFound = CommandNotFound
 
 	app.Action = func(c *cli.Context) error {
-		fmt.Printf("Hello, gh-contrib")
+
+		/* parse arguments */
+		user := c.String("user")
+		startdate := c.String("start")
+		enddate := c.String("end")
+		validate(user, startdate, enddate)
+
+		fmt.Printf("Hello, gh-contrib\n")
 		return nil
 	}
 	app.Run(os.Args)
