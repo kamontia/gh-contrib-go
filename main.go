@@ -33,7 +33,7 @@ func existUser(u string) bool {
 }
 
 func validate(u string, s string, e string) {
-	r := regexp.MustCompile(`^(\d{6})$`)
+	r := regexp.MustCompile(`^(\d{4})-(\d{2})-(\d{2})$`)
 
 	if len(u) == 0 || len(s) == 0 || len(e) == 0 {
 		fmt.Printf("-u, -s, -e is required.]\n")
@@ -50,9 +50,9 @@ func validate(u string, s string, e string) {
 
 }
 
-func getContrib(u string) string {
+func getContrib(u string, s string, e string) string {
 
-	url := "https://api.github.com/search/issues?q=type:pr+in:body+is:merged+author:" + u
+	url := "https://api.github.com/search/issues?q=type:pr+in:body+is:merged+merged:" + s + ".." + e + "+author:" + u
 
 	response, err := http.Get(url)
 	if err != nil {
@@ -82,11 +82,11 @@ func main() {
 		},
 		cli.StringFlag{
 			Name:  "start, s",
-			Usage: "Specify start date. format is YYMMDD",
+			Usage: "Specify start date. format is YYYY-MM-DD",
 		},
 		cli.StringFlag{
 			Name:  "end, e",
-			Usage: "Specify end date. format is YYMMDD",
+			Usage: "Specify end date. format is YYYY-MM-DD",
 		},
 	}
 	app.Commands = Commands
@@ -101,7 +101,7 @@ func main() {
 		validate(user, startdate, enddate)
 
 		/* get the contribution as JSON from GitHub.com */
-		result := getContrib(user)
+		result := getContrib(user, startdate, enddate)
 		var _ = result // avoid build error
 
 		/* parse json */

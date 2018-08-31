@@ -4,7 +4,7 @@
 #
 # Usage: ./test.sh
 
-./gh-contrib -u chaspy -s 180824 -e 180830
+./gh-contrib -u chaspy -s "2018-08-24" -e "2018-08-30"
 ret="$?"
 
 if [[ "$ret" == "0" ]]; then
