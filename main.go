@@ -50,6 +50,23 @@ func validate(u string, s string, e string) {
 
 }
 
+func getContrib(u string) string {
+
+	url := "https://api.github.com/search/issues?q=type:pr+in:body+is:merged+author:" + u
+
+	response, err := http.Get(url)
+	if err != nil {
+		os.Exit(2)
+	}
+
+	defer response.Body.Close()
+	body, error := ioutil.ReadAll(response.Body)
+	if error != nil {
+		log.Fatal(error)
+	}
+	return string(body)
+}
+
 func main() {
 	app := cli.NewApp()
 	app.Name = Name
@@ -83,19 +100,9 @@ func main() {
 		enddate := c.String("end")
 		validate(user, startdate, enddate)
 
-		url := "https://api.github.com/search/issues?q=type:pr+in:body+is:merged+author:chaspy"
-
-		response, err := http.Get(url)
-		if err != nil {
-			os.Exit(2)
-		}
-
-		defer response.Body.Close()
-		body, error := ioutil.ReadAll(response.Body)
-		if error != nil {
-			log.Fatal(error)
-		}
-		fmt.Println("[body] " + string(body))
+		/* get the contribution as JSON from GitHub.com */
+		result := getContrib(user)
+		var _ = result // avoid build error
 
 		/* parse json */
 
