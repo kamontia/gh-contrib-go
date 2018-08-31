@@ -1,0 +1,13 @@
+version: 2
+jobs:
+  build:
+    environment:
+      - GOPATH: /home/circleci/go
+    docker:
+      - image: circleci/golang:1.9
+    working_directory: /home/circleci/go/src/chaspy/gh-contrib
+    steps:
+      - checkout
+      - run: go get github.com/chaspy/gh-contrib
+      - run: go build
+      - run: ./script/test.sh
