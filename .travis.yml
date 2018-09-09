@@ -1,0 +1,11 @@
+language: go
+
+notifications:
+  email: false
+
+before_script:
+  - go install ./vendor/github.com/golangci/golangci-lint/cmd/golangci-lint
+
+script:
+  - golangci-lint run
+  - bash ./script/test.sh  
