@@ -159,7 +159,7 @@ func main() {
 		user := c.String("user")
 		startdate := c.String("start")
 		enddate := c.String("end")
-		validate(user, startdate, enddate)
+		//validate(user, startdate, enddate)
 
 		/* get the contribution as JSON from GitHub.com */
 		result := getContrib(user, startdate, enddate)
@@ -175,16 +175,12 @@ func main() {
 			os.Exit(1)
 		}
 
-		/* sample */
+		/* Output console */
 		for _, v := range data.Items {
-			fmt.Println("*** TITLE ***")
 			fmt.Println(v.Title)
-			fmt.Println("*** STATE ***")
-			fmt.Println(v.State)
+			fmt.Println(v.URL)
 			fmt.Println("")
 		}
-
-		/* put std.out */
 
 		return nil
 	}
